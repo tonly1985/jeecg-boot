@@ -19,18 +19,22 @@ services:
       --default-authentication-plugin=caching_sha2_password
     ports:
       - 3306:3306
+    networks:
+      - jeecg-boot
 
   jeecg-boot-redis:
-    image: redis:5.0
+    image: registry.cn-hangzhou.aliyuncs.com/jeecgdocker/redis:5.0
     ports:
       - 6379:6379
     restart: always
     hostname: jeecg-boot-redis
     container_name: jeecg-boot-redis
+    networks:
+      - jeecg-boot
 
   jeecg-boot-system:
     build:
-      context: ./jeecg-boot-module-system
+      context: ./jeecg-module-system/jeecg-system-start
     restart: on-failure
     depends_on:
       - jeecg-boot-mysql
@@ -40,3 +44,9 @@ services:
     hostname: jeecg-boot-system
     ports:
       - 8080:8080
+    networks:
+      - jeecg-boot
+
+networks:
+  jeecg-boot:
+    name: jeecg_boot
